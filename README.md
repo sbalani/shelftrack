@@ -33,4 +33,4 @@ No `vercel.json` is required; Vercel detects the Next.js application automatical
 
 ## Current scope
 
-The authentication and user administration flows are connected to Neon Auth. Shelf records and photo uploads currently demonstrate the complete interface flow with sample data; database persistence and private Object Storage uploads are the next backend phase.
+Authentication and assigned-account creation are connected to Neon Auth. Employee, retailer hierarchy, franchise ownership, location, product catalog, shelf records, and photo workflows currently demonstrate the complete interface with sample/local state. Lakebase Postgres persistence, private Object Storage uploads, and AI image extraction are the next backend phase.

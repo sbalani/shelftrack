@@ -1,6 +1,6 @@
 import type { AppRole } from "@/lib/permissions";
 import { canManageUsers, roleLabels } from "@/lib/permissions";
-import { Camera, ClipboardList, LayoutDashboard, MapPinned, Users } from "lucide-react";
+import { Camera, ClipboardList, LayoutDashboard, MapPinned, PackageSearch, Store, Users } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "./sign-out-button";
 
@@ -11,7 +11,7 @@ const nav = [
 ];
 
 export function AppShell({ children, name, role }: { children: React.ReactNode; name: string; role: AppRole }) {
-  const items = canManageUsers(role) ? [...nav, { href: "/users", label: "Team", icon: Users }] : nav;
+  const items = canManageUsers(role) ? [...nav, { href: "/users", label: "People", icon: Users }, { href: "/retailers", label: "Retail network", icon: Store }, { href: "/catalog", label: "Product catalog", icon: PackageSearch }] : nav;
   const initials = name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
   return (
