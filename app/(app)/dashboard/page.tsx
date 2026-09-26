@@ -27,11 +27,11 @@ export default async function DashboardPage() {
           <div className="panel-head"><div><p className="eyebrow">Live activity</p><h2>Latest submissions</h2></div><Link href="/submissions" className="text-link">View all <ArrowRight size={16} /></Link></div>
           <div className="submission-list">
             {submissions.map((item) => (
-              <article className="submission-row" key={item.id}>
+              <Link className="submission-row" href={`/submissions/${item.id}`} key={item.id}>
                 <div className={`shelf-thumb ${item.accent}`} aria-hidden="true"><i /><i /><i /></div>
-                <div className="submission-main"><strong>{item.store}</strong><span><MapPin size={14} />{item.area}</span><small>{item.collectedBy} · {item.photos} photos</small></div>
+                <div className="submission-main"><strong>{item.store}</strong><span><MapPin size={14} />{item.area}</span><small>{item.collectedBy} · {item.photos.length} photos</small></div>
                 <div className="submission-meta"><StatusPill status={item.status} /><time>{item.capturedAt}</time></div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>

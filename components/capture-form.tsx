@@ -1,21 +1,31 @@
 "use client";
 
-import { Camera, Check, Crosshair, ImagePlus, LoaderCircle, MapPin, UploadCloud, X } from "lucide-react";
+import { Camera, Check, Crosshair, ImagePlus, LoaderCircle, MapPin, Sparkles, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+type CapturedPhoto = {
+  url: string;
+  category: string;
+  shelfArea: string;
+  angle: string;
+  displayType: "primary" | "secondary" | "additional";
+};
 
 export function CaptureForm({ currentUser, allowDelegation }: { currentUser: string; allowDelegation: boolean }) {
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
   const [locating, setLocating] = useState(false);
   const [location, setLocation] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const today = new Date().toISOString().slice(0, 10);
 
-  useEffect(() => () => photos.forEach((url) => URL.revokeObjectURL(url)), [photos]);
-
   function addPhotos(files: FileList | null) {
     if (!files) return;
-    setPhotos((current) => [...current, ...Array.from(files).map((file) => URL.createObjectURL(file))]);
+    setPhotos((current) => [...current, ...Array.from(files).map((file) => ({ url: URL.createObjectURL(file), category: "", shelfArea: "", angle: "Front / full bay", displayType: "primary" as const }))]);
+  }
+
+  function updatePhoto(index: number, update: Partial<CapturedPhoto>) {
+    setPhotos((items) => items.map((photo, itemIndex) => itemIndex === index ? { ...photo, ...update } : photo));
   }
 
   function locate() {
@@ -63,7 +73,7 @@ export function CaptureForm({ currentUser, allowDelegation }: { currentUser: str
             <small>Capture the full bay straight-on. JPG, PNG or HEIC.</small>
             <span className="button button-secondary"><ImagePlus size={17} />Add photos</span>
           </label>
-          {photos.length ? <div className="photo-preview-grid">{photos.map((src, index) => <div key={src}><Image src={src} alt={`Shelf preview ${index + 1}`} width={180} height={180} unoptimized /><button type="button" aria-label="Remove photo" onClick={() => setPhotos((items) => items.filter((_, itemIndex) => itemIndex !== index))}><X size={15} /></button></div>)}</div> : null}
+          {photos.length ? <><div className="photo-preview-grid">{photos.map((photo, index) => <div key={photo.url}><Image src={photo.url} alt={`Shelf preview ${index + 1}`} width={180} height={180} unoptimized /><span className="photo-index">{index + 1}</span><button type="button" aria-label="Remove photo" onClick={() => { URL.revokeObjectURL(photo.url); setPhotos((items) => items.filter((_, itemIndex) => itemIndex !== index)); }}><X size={15} /></button></div>)}</div><div className="photo-detail-list"><div className="photo-detail-intro"><Sparkles size={18} /><div><strong>Classify every image</strong><span>AI will suggest brands and SKUs after upload. These details keep separate shelf areas and displays from being mixed together.</span></div></div>{photos.map((photo, index) => <article className="capture-photo-detail" key={photo.url}><div className="capture-photo-label"><span>{index + 1}</span><div><strong>Photo {index + 1}</strong><small>{photo.category || "Category not set"} · {photo.shelfArea || "Shelf area not set"}</small></div></div><div className="capture-photo-fields"><div className="field"><label htmlFor={`category-${index}`}>Category</label><input id={`category-${index}`} value={photo.category} onChange={(event) => updatePhoto(index, { category: event.target.value })} placeholder="e.g. Beverages" required /></div><div className="field"><label htmlFor={`area-${index}`}>Shelf area</label><input id={`area-${index}`} value={photo.shelfArea} onChange={(event) => updatePhoto(index, { shelfArea: event.target.value })} placeholder="e.g. Soft drinks · Aisle 4" required /></div><div className="field"><label htmlFor={`angle-${index}`}>Angle / side</label><select id={`angle-${index}`} value={photo.angle} onChange={(event) => updatePhoto(index, { angle: event.target.value })}><option>Front / full bay</option><option>Front / close</option><option>Left section</option><option>Right section</option><option>Left oblique</option><option>Right oblique</option></select></div><div className="field"><label htmlFor={`display-${index}`}>Display type</label><select id={`display-${index}`} value={photo.displayType} onChange={(event) => updatePhoto(index, { displayType: event.target.value as CapturedPhoto["displayType"] })}><option value="primary">Primary shelf</option><option value="secondary">Secondary display</option><option value="additional">Additional display</option></select></div></div></article>)}</div></> : null}
         </div>
       </section>
 
