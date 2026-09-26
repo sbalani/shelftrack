@@ -1,0 +1,7 @@
+.neon
+.env.local
+node_modules/
+.next/
+out/
+*.log
+.vercel/
