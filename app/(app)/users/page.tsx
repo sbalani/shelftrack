@@ -1,7 +1,7 @@
 import { CreateUserForm } from "@/components/create-user-form";
 import { auth } from "@/lib/auth/server";
 import { getUserRole, roleLabels } from "@/lib/permissions";
-import { employees } from "@/lib/domain-data";
+import { getEmployees } from "@/lib/db/queries";
 import { EmployeeDirectory } from "@/components/employee-directory";
 import { Building2, PackageSearch, ShieldCheck, UserRound } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ export default async function UsersPage() {
 
   const { data } = await auth.admin.listUsers({ query: { limit: 50, sortBy: "name", sortDirection: "asc" } });
   const users = data?.users || [session.user];
+  const employees = await getEmployees();
 
   return (
     <main className="page users-page">
@@ -32,7 +33,7 @@ export default async function UsersPage() {
           {users.map((user) => {
             const role = getUserRole(user as { role?: unknown; appRole?: unknown });
             const employee = employees.find((item) => item.email === user.email || item.id === (user as { employeeId?: unknown }).employeeId);
-            return <article key={user.id}><span className="avatar">{(user.name || user.email).slice(0, 2).toUpperCase()}</span><div><strong>{user.name || "Unnamed user"}</strong><span>{employee ? `${employee.id} · ${user.email}` : `Employee assignment required · ${user.email}`}</span></div><span className={`role-chip role-${role}`}>{roleLabels[role]}</span></article>;
+            return <article key={user.id}><span className="avatar">{(user.name || user.email).slice(0, 2).toUpperCase()}</span><div><strong>{user.name || "Unnamed user"}</strong><span>{employee ? `${employee.employeeCode} · ${user.email}` : `Employee assignment required · ${user.email}`}</span></div><span className={`role-chip role-${role}`}>{roleLabels[role]}</span></article>;
           })}
         </div>
       </section>

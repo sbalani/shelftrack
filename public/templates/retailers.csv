@@ -1,0 +1,3 @@
+company_name,geography,retail_brand,operating_model,location_name,city,province,format,address,owner_name,owner_type
+Example Retail Group,Indonesia,Example Market,corporate,Example Market Central,Jakarta,DKI Jakarta,Supermarket,Example address,Example Retail Group,corporate
+Example Retail Group,Indonesia,Example Express,franchise,Example Express Dago,Bandung,West Java,Convenience,Example address,Example Franchise Partner,franchise_partner

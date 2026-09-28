@@ -21,11 +21,13 @@ Copy `.env.example` to `.env.local` and provide:
 
 - `NEON_AUTH_BASE_URL`: the production branch Auth URL
 - `NEON_AUTH_COOKIE_SECRET`: a secret generated with `openssl rand -base64 32`
+- `DATABASE_URL`: the pooled production connection string used by the app
+- `DATABASE_URL_UNPOOLED`: the direct connection string used by Drizzle migrations locally
 
 ## Vercel deployment
 
 1. Import this GitHub repository into Vercel as a Next.js project.
-2. Add `NEON_AUTH_BASE_URL` and `NEON_AUTH_COOKIE_SECRET` in Vercel project settings.
+2. Add `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, and pooled `DATABASE_URL` in Vercel project settings.
 3. Deploy the project.
 4. Add the resulting `https://<project>.vercel.app` domain to the Neon Auth trusted domains list.
 
@@ -33,4 +35,6 @@ No `vercel.json` is required; Vercel detects the Next.js application automatical
 
 ## Current scope
 
-Authentication and assigned-account creation are connected to Neon Auth. Employee, retailer hierarchy, franchise ownership, location, product catalog, shelf records, and photo workflows currently demonstrate the complete interface with sample/local state. Lakebase Postgres persistence, private Object Storage uploads, and AI image extraction are the next backend phase.
+Authentication and assigned-account creation are connected to Neon Auth. Employees, retailer hierarchy, franchise ownership, locations, product brands, SKUs, and assortment assignments persist in Lakebase Postgres. Retailer and product imports accept CSV files up to 2 MB; templates are available from their respective admin pages. Normalized database constraints skip duplicate companies, brands, locations, employees, SKUs, and assignments.
+
+Shelf visit tables are ready, but capture persistence, private Object Storage uploads, and AI image extraction remain the next backend phase. The previous sample shelf submissions have been removed.
